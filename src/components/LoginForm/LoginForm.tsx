@@ -2,11 +2,13 @@ import React, { useContext, useState } from "react";
 import API from "../../services/tesonet.api";
 import { store } from "../../store/store";
 import { SaveToken } from "../../store/store.actions";
+import { LoginPage, FormWrapper, FormTitle, TextInput, LoginButton, ErrorText } from "./styles";
 
 function LoginForm() {
 	const { dispatch } = useContext(store);
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [isError, setIsError] = useState(false);
 
 	const onChangeUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setUsername(event.target.value);
@@ -24,16 +26,37 @@ function LoginForm() {
 			localStorage.setItem("token", token);
 			dispatch(SaveToken(token));
 		} catch (error) {
-			console.log(error.response);
+			setIsError(true);
 		}
 	};
 
 	return (
-		<form onSubmit={onLogin}>
-			<input type="text" value={username} onChange={onChangeUsername} />
-			<input type="text" value={password} onChange={onChangePassword} />
-			<button type="submit">login</button>
-		</form>
+		<LoginPage>
+			<FormWrapper>
+				<FormTitle>Sign in</FormTitle>
+				<form onSubmit={onLogin}>
+					<TextInput
+						type="text"
+						placeholder="Username"
+						value={username}
+						onChange={onChangeUsername}
+					/>
+					<TextInput
+						type="password"
+						placeholder="Password"
+						value={password}
+						onChange={onChangePassword}
+					/>
+					<LoginButton type="submit">Login</LoginButton>
+
+					{isError && (
+						<ErrorText role="alert">
+							An error occured, please try different username/password
+						</ErrorText>
+					)}
+				</form>
+			</FormWrapper>
+		</LoginPage>
 	);
 }
 

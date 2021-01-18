@@ -1,5 +1,6 @@
 export enum ActionType {
 	SaveToken = "saveToken",
+	RemoveToken = "removeToken",
 }
 
 interface ISaveToken {
@@ -7,9 +8,17 @@ interface ISaveToken {
 	token: string;
 }
 
-export type Actions = ISaveToken;
+interface IRemoveToken {
+	type: ActionType.RemoveToken;
+}
+
+export type Actions = ISaveToken | IRemoveToken;
 
 export const SaveToken = (token: string): ISaveToken => ({
 	type: ActionType.SaveToken,
 	token,
+});
+
+export const RemoveToken = (): IRemoveToken => ({
+	type: ActionType.RemoveToken,
 });

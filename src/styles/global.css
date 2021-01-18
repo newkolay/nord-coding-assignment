@@ -18,6 +18,10 @@
 	src: url("../assets/fonts/Roboto-Bold.ttf");
 }
 
+html {
+	font-size: 100%;
+}
+
 body {
 	margin: 0;
 	font-family: "Roboto", georgia, serif;

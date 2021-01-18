@@ -26,7 +26,11 @@ const reducer = (state: IStoreState, action: Actions) => {
 				...state,
 				token: action.token,
 			};
-
+		case ActionType.RemoveToken:
+			return {
+				...state,
+				token: "",
+			};
 		default:
 			return state;
 	}

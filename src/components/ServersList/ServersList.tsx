@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import Server from "../../common/types";
 import getFlags from "../../services/countries.api";
 import API from "../../services/tesonet.api";
 import { store } from "../../store/store";
+import { RemoveToken } from "../../store/store.actions";
 import parseCountryName from "../../utils/parse-country-name";
 import sortByProperty from "../../utils/sort-by-property";
 import {
@@ -18,6 +20,7 @@ import {
 	ServerDistance,
 	ServerImage,
 	LoadingText,
+	LogOut,
 } from "./styles";
 
 const name = "name";
@@ -25,8 +28,10 @@ const distance = "distance";
 
 function ServersList() {
 	const {
+		dispatch,
 		state: { token },
 	} = useContext(store);
+	const history = useHistory();
 
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [servers, setServers] = useState<Server[]>([]);
@@ -40,10 +45,12 @@ function ServersList() {
 				setFlags(await getFlags(response.data));
 				setServers(response.data);
 				setIsLoaded(true);
+			} else {
+				history.push("/");
 			}
 		}
 		getResults();
-	}, [token]);
+	}, [history, token]);
 
 	const isActiveSort = (sort: string) => activeSort === sort || activeSort === `-${sort}`;
 	const getSortArrow = (sort: string) =>
@@ -63,8 +70,14 @@ function ServersList() {
 		setServers(sortedServers);
 	};
 
+	const logOut = () => {
+		localStorage.removeItem("token");
+		dispatch(RemoveToken());
+	};
+
 	return (
 		<Container>
+			<LogOut onClick={logOut}>Log Out</LogOut>
 			<Title>Servers</Title>
 			<SortOptions>
 				<SortTitle>Sort by:</SortTitle>
